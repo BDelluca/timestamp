@@ -20,8 +20,32 @@ app.get("/", function (req, res) {
 
 
 // your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+app.get("/api/:timeRequest", function (req, res) {
+  let { timeRequest } = req.params;
+  let timeRequestNumber = Number(timeRequest);
+  let dateUnix = new Date(timeRequestNumber).toUTCString();
+  let dateUtc = new Date(timeRequest + "T00:00:00").toUTCString();
+  let dateUtcToUnix = Date.parse(dateUtc);
+
+  if (dateUnix == "Invalid Date") {
+    if (dateUtc == "Invalid Date") {
+        res.json({
+          error : "Invalid Date"
+        })
+    } else {
+      res.json({
+        unix: dateUtcToUnix, 
+        utc: dateUtc
+      });
+    }
+  } else {
+    res.json({
+      unix: timeRequestNumber, 
+      utc: dateUnix
+    });
+  }
+
+  
 });
 
 
